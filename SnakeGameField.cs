@@ -4,6 +4,7 @@ using static ConsoleSnakeGame.Constants;
 
 namespace ConsoleSnakeGame
 {
+    // Represents the game field and all its components
     public class SnakeGameField
     {
         private readonly int width;
@@ -32,6 +33,7 @@ namespace ConsoleSnakeGame
             snake = new Snake(new Position(width / 2, height / 2));
             food = new List<Position>();
             walls = new HashSet<Position>();
+            // Generate the initial food
             food.Add(GenerateFood());
             currentDirection = Direction.Right;
             nextDirection = Direction.Right;
@@ -41,6 +43,7 @@ namespace ConsoleSnakeGame
             levelScore = FruitsToWin;
         }
 
+        // Draw the board and the initial message to start the level
         public void StartLevel()
         {
             Console.Clear();
@@ -50,6 +53,7 @@ namespace ConsoleSnakeGame
             DrawStatusMessage(string.Empty);
         }
 
+        // Clear the screen and draw the board from scratch
         private void DrawBoard()
         {
             Console.SetCursorPosition(0, 0);
@@ -83,11 +87,14 @@ namespace ConsoleSnakeGame
             }
         }
 
+        // Draw only the changes that happened since the last snake movement, avoiding flickering
         public void DrawDelta()
         {
             foreach (var position in delta.ChangedPositions)
             {
+                // Position the cusror at the right spot
                 Console.SetCursorPosition(position.X, position.Y);
+                // Draw the right character
                 if (snake.Contains(position))
                 {
                     Console.Write(SnakeChar);
@@ -105,11 +112,11 @@ namespace ConsoleSnakeGame
                     Console.Write(EmptyChar);
                 }
             }
-
             DrawScoreAndLevel();
             delta.ClearChanges();
         }
 
+        // Update the score and level display
         private void DrawScoreAndLevel()
         {
             Console.SetCursorPosition(0, height);
@@ -118,12 +125,15 @@ namespace ConsoleSnakeGame
             Console.WriteLine($"Level: {level}            ");
         }
 
+        // Draw a message at the bottom of the screen, such as game over or level starts
         public void DrawStatusMessage(string message)
         {
             Console.SetCursorPosition(0, height + 3);
             Console.WriteLine(message.PadRight(Console.WindowWidth));
         }
 
+        // Handle the user input. The user can change the snake's direction via the arrow keys, numpad arrow keys or WASD
+        // Ctrl+C can also be used to exit the game
         public void Input()
         {
             if (Console.KeyAvailable)
@@ -141,11 +151,12 @@ namespace ConsoleSnakeGame
             }
         }
 
+        // Update the game state, based on the user input and the current state of the snake
         public void Update()
         {
             currentDirection = nextDirection;
             var nextPosition = snake.GetNextPosition(currentDirection);
-
+            // Check if the snake hit a wall, itself or an internal wall
             if (nextPosition.X == 0 || nextPosition.X == width - 1 || nextPosition.Y == 0 || nextPosition.Y == height - 1 || snake.Contains(nextPosition) || walls.Contains(nextPosition))
             {
                 gameOver = true;
@@ -153,8 +164,9 @@ namespace ConsoleSnakeGame
             }
             else
             {
+                // The snake has survived another step
                 var tail = snake.GetTail();
-
+                // Check if the snake ate a fruit
                 if (food.Contains(nextPosition))
                 {
                     snake.Grow(nextPosition);
@@ -180,10 +192,12 @@ namespace ConsoleSnakeGame
                     {
                         level++;
                         levelScore = FruitsToWin;
+                        // The board gets another wall every level, making it harder to navigate
                         AddWall();
                         StartLevel();
                     }
                 }
+                // Else, the snake moves normally
                 else
                 {
                     snake.Move(nextPosition);
@@ -193,10 +207,12 @@ namespace ConsoleSnakeGame
             }
         }
 
+        // Generate a new food item at a random position on the board
         private Position GenerateFood()
         {
             Position position;
             int tries = 0;
+            // A simplistic mechanism to generate food - try for N times (configurable) and skip if none were found
             do
             {
                 position = new Position(random.Next(1, width - 1), random.Next(1, height - 1));
@@ -206,15 +222,18 @@ namespace ConsoleSnakeGame
             return position;
         }
 
+        // Add a wall to the board, making it harder to navigate
         private void AddWall()
         {
+            // A simplistic mechanism to find a free spot for the wall - try for N times (configurable) and skip if none were found
             for (int tries = 0; tries < MaxTries; tries++)
             {
+                // Randomize the wall's orientation, length and position
                 bool horizontal = random.Next(2) == 0;
                 int length = random.Next(3, 6);
                 int x = random.Next(1, width - 1);
                 int y = random.Next(1, height - 1);
-
+                // Add 2 - 4 wall segments in a row, making sure none lands on the snake or food
                 List<Position> newWall = new List<Position>();
                 for (int i = 0; i < length; i++)
                 {
@@ -226,7 +245,7 @@ namespace ConsoleSnakeGame
                     }
                     newWall.Add(pos);
                 }
-
+                // If all was good, add the wall to the relevant data structures and exit
                 if (newWall.Count == length)
                 {
                     foreach (var pos in newWall)

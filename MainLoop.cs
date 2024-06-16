@@ -12,11 +12,14 @@ namespace ConsoleSnakeGame
             this.game = game;
         }
 
+        // Main game loop, runs the game until it's over
         public void Run()
         {
             try
             {
+                // Draw the board
                 game.StartLevel();
+                // Game loop
                 while (!game.GameOver)
                 {
                     game.Input();

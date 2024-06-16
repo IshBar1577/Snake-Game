@@ -2,6 +2,7 @@
 
 namespace ConsoleSnakeGame
 {
+    // Represents a position in the game board
     public struct Position
     {
         public int X { get; }
