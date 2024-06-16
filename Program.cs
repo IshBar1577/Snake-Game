@@ -3,14 +3,14 @@ using System;
 
 namespace ConsoleSnakeGame
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             try
             {
                 Console.CursorVisible = false;
-                Console.SetWindowSize(Constants.BoardWidth, Constants.BoardHeight + 5);
+                Console.SetWindowSize(Math.Max(Constants.BoardWidth, 50), Constants.BoardHeight + 5);
 
                 SnakeGameField game = new SnakeGameField(Constants.BoardWidth, Constants.BoardHeight);
                 MainLoop mainLoop = new MainLoop(game);

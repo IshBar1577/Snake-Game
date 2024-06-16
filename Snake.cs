@@ -21,7 +21,7 @@ namespace ConsoleSnakeGame
 
         public Position GetNextPosition(Direction direction)
         {
-            var head = body.First.Value;
+            var head = GetHead();
             return direction switch
             {
                 Direction.Up => new Position(head.X, head.Y - 1),
@@ -34,7 +34,7 @@ namespace ConsoleSnakeGame
 
         public void Move(Position nextPosition)
         {
-            var tail = body.Last.Value;
+            var tail = GetTail();
             body.RemoveLast();
             bodySet.Remove(tail);
 
@@ -52,9 +52,19 @@ namespace ConsoleSnakeGame
             bodySet.Add(position);
         }
 
+        public Position GetHead()
+        {
+            return body.First.Value;
+        }
+
         public Position GetTail()
         {
             return body.Last.Value;
+        }
+
+        public int GetSize()
+        {
+            return body.Count;
         }
     }
 }

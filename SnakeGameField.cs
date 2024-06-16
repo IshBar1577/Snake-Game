@@ -132,10 +132,10 @@ namespace ConsoleSnakeGame
 
                 nextDirection = key switch
                 {
-                    ConsoleKey.UpArrow or ConsoleKey.W when currentDirection != Direction.Down => Direction.Up,
-                    ConsoleKey.DownArrow or ConsoleKey.S when currentDirection != Direction.Up => Direction.Down,
-                    ConsoleKey.LeftArrow or ConsoleKey.A when currentDirection != Direction.Right => Direction.Left,
-                    ConsoleKey.RightArrow or ConsoleKey.D when currentDirection != Direction.Left => Direction.Right,
+                    ConsoleKey.NumPad8 or ConsoleKey.UpArrow or ConsoleKey.W when currentDirection != Direction.Down => Direction.Up,
+                    ConsoleKey.NumPad2 or ConsoleKey.DownArrow or ConsoleKey.S when currentDirection != Direction.Up => Direction.Down,
+                    ConsoleKey.NumPad4 or ConsoleKey.LeftArrow or ConsoleKey.A when currentDirection != Direction.Right => Direction.Left,
+                    ConsoleKey.NumPad6 or ConsoleKey.RightArrow or ConsoleKey.D when currentDirection != Direction.Left => Direction.Right,
                     _ => nextDirection
                 };
             }
